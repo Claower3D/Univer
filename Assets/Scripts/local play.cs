@@ -5,26 +5,27 @@ using System.Collections.Generic;
 public class LocalGameMenu : MonoBehaviour
 {
     private bool showLocalMenu = false;
-    private string gameName = "Моя игра";
-    private string playerName = "Игрок";
+    private string gameName = "РњРѕСЏ РёРіСЂР°";
+    private string playerName = "РРіСЂРѕРє";
     private string ipAddress = "localhost";
     private string port = "7777";
+    public string targetGameScene = "SampleScene"; // РЎС†РµРЅР° РёРіСЂС‹
     private Vector2 scrollPosition;
     private bool isCreatingGame = false;
     private bool isJoiningGame = false;
 
-    // Список доступных игр (для демонстрации)
+    // РЎРїРёСЃРѕРє РґРѕСЃС‚СѓРїРЅС‹С… РёРіСЂ (РґР»СЏ РґРµРјРѕРЅСЃС‚СЂР°С†РёРё)
     private List<string> availableGames = new List<string>()
     {
-        "Игра Петра",
-        "Сервер Алексея",
-        "Локалка Марии",
-        "Тестовый сервер"
+        "РРіСЂР° РџРµС‚СЂР°",
+        "РЎРµСЂРІРµСЂ РђР»РµРєСЃРµСЏ",
+        "Р›РѕРєР°Р»РєР° РњР°СЂРёРё",
+        "РўРµСЃС‚РѕРІС‹Р№ СЃРµСЂРІРµСЂ"
     };
 
     void Update()
     {
-        // Открытие/закрытие меню по клавише L
+        // РћС‚РєСЂС‹С‚РёРµ/Р·Р°РєСЂС‹С‚РёРµ РјРµРЅСЋ РїРѕ РєР»Р°РІРёС€Рµ L
         if (Input.GetKeyDown(KeyCode.L))
         {
             showLocalMenu = !showLocalMenu;
@@ -37,8 +38,8 @@ public class LocalGameMenu : MonoBehaviour
     {
         if (!showLocalMenu) return;
 
-        // Темный фон
-        GUI.color = new Color(0, 0, 0, 0.8f);
+        // РўРµРјРЅС‹Р№ С„РѕРЅ
+        GUI.color = new Color(0, 0, 0, 0.85f);
         GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), MakeTex(1, 1, Color.black));
         GUI.color = Color.white;
 
@@ -47,25 +48,25 @@ public class LocalGameMenu : MonoBehaviour
 
     void DrawLocalGameMenu()
     {
-        float width = 500;
-        float height = 600;
+        float width = 560;
+        float height = 680;
         float x = (Screen.width - width) / 2;
         float y = (Screen.height - height) / 2;
 
-        // Фон меню
+        // Р¤РѕРЅ РјРµРЅСЋ
         GUIStyle menuStyle = new GUIStyle(GUI.skin.box);
-        menuStyle.normal.background = MakeTex(2, 2, new Color(0.1f, 0.1f, 0.1f, 0.95f));
+        menuStyle.normal.background = MakeTex(2, 2, new Color(0.12f, 0.12f, 0.14f, 0.98f));
         GUI.Box(new Rect(x, y, width, height), "", menuStyle);
 
-        // Заголовок
+        // Р—Р°РіРѕР»РѕРІРѕРє
         GUIStyle titleStyle = new GUIStyle(GUI.skin.label);
         titleStyle.alignment = TextAnchor.MiddleCenter;
         titleStyle.fontStyle = FontStyle.Bold;
-        titleStyle.fontSize = 28;
-        titleStyle.normal.textColor = Color.white;
-        GUI.Label(new Rect(x, y + 20, width, 40), "ЛОКАЛЬНАЯ ИГРА", titleStyle);
+        titleStyle.fontSize = 26;
+        titleStyle.normal.textColor = new Color(1f, 0.8f, 0.2f);
+        GUI.Label(new Rect(x, y + 15, width, 35), "Р›РћРљРђР›Р¬РќРђРЇ РР“Р Рђ Р Р›РћР‘Р‘Р", titleStyle);
 
-        // Стили
+        // РЎС‚РёР»Рё
         GUIStyle labelStyle = new GUIStyle(GUI.skin.label);
         labelStyle.normal.textColor = Color.white;
         labelStyle.fontSize = 14;
@@ -79,7 +80,7 @@ public class LocalGameMenu : MonoBehaviour
         buttonStyle.fontStyle = FontStyle.Bold;
         buttonStyle.fixedHeight = 35;
 
-        float contentY = y + 80;
+        float contentY = y + 60;
 
         if (!isCreatingGame && !isJoiningGame)
         {
@@ -94,7 +95,7 @@ public class LocalGameMenu : MonoBehaviour
             DrawJoinGameMenu(x, contentY, width, labelStyle, textFieldStyle, buttonStyle);
         }
 
-        // Кнопка закрытия
+        // РљРЅРѕРїРєР° Р·Р°РєСЂС‹С‚РёСЏ (РєСЂРµСЃС‚РёРє)
         if (GUI.Button(new Rect(x + width - 40, y + 10, 30, 30), "X", buttonStyle))
         {
             showLocalMenu = false;
@@ -103,29 +104,85 @@ public class LocalGameMenu : MonoBehaviour
         }
     }
 
+    void DrawVehicleSelector(float x, float startY, float width, GUIStyle buttonStyle, GUIStyle labelStyle)
+    {
+        // Р Р°РјРєР° СЃРµРєС†РёРё РІС‹Р±РѕСЂР° С‚РµС…РЅРёРєРё
+        float boxHeight = 150;
+        GUIStyle sectionBoxStyle = new GUIStyle(GUI.skin.box);
+        sectionBoxStyle.normal.background = MakeTex(2, 2, new Color(0.18f, 0.18f, 0.22f, 0.9f));
+        GUI.Box(new Rect(x + 20, startY, width - 40, boxHeight), "", sectionBoxStyle);
+
+        // Р—Р°РіРѕР»РѕРІРѕРє СЃРµРєС†РёРё
+        GUIStyle headerStyle = new GUIStyle(labelStyle);
+        headerStyle.fontStyle = FontStyle.Bold;
+        headerStyle.alignment = TextAnchor.MiddleCenter;
+        headerStyle.normal.textColor = new Color(0.4f, 0.85f, 1f);
+        GUI.Label(new Rect(x + 20, startY + 8, width - 40, 22), "Р’Р«Р‘РћР  РЎРџР•Р¦РўР•РҐРќРРљР Р”Р›РЇ РР“Р Р«:", headerStyle);
+
+        // РџРѕР»СѓС‡Р°РµРј РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ С‚РµРєСѓС‰РµР№ С‚РµС…РЅРёРєРµ
+        VehicleInfo currentInfo = VehicleSelectionManager.GetInfo(VehicleSelectionManager.SelectedVehicle);
+
+        // РљРЅРѕРїРєР° Р’Р»РµРІРѕ
+        if (GUI.Button(new Rect(x + 35, startY + 36, 45, 36), "в—Ђ", buttonStyle))
+        {
+            VehicleSelectionManager.SelectPrevious();
+        }
+
+        // РќР°Р·РІР°РЅРёРµ С‚РµС…РЅРёРєРё
+        GUIStyle vehicleTitleStyle = new GUIStyle(labelStyle);
+        vehicleTitleStyle.alignment = TextAnchor.MiddleCenter;
+        vehicleTitleStyle.fontSize = 18;
+        vehicleTitleStyle.fontStyle = FontStyle.Bold;
+        vehicleTitleStyle.normal.textColor = Color.yellow;
+        GUI.Label(new Rect(x + 85, startY + 36, width - 170, 36), currentInfo.displayName, vehicleTitleStyle);
+
+        // РљРЅРѕРїРєР° Р’РїСЂР°РІРѕ
+        if (GUI.Button(new Rect(x + width - 80, startY + 36, 45, 36), "в–¶", buttonStyle))
+        {
+            VehicleSelectionManager.SelectNext();
+        }
+
+        // РћРїРёСЃР°РЅРёРµ С‚РµС…РЅРёРєРё
+        GUIStyle descStyle = new GUIStyle(labelStyle);
+        descStyle.fontSize = 12;
+        descStyle.wordWrap = true;
+        descStyle.normal.textColor = new Color(0.85f, 0.85f, 0.85f);
+        GUI.Label(new Rect(x + 35, startY + 76, width - 70, 38), currentInfo.description, descStyle);
+
+        // РџРѕРґСЃРєР°Р·РєР° РїРѕ СѓРїСЂР°РІР»РµРЅРёСЋ
+        GUIStyle hintStyle = new GUIStyle(labelStyle);
+        hintStyle.fontSize = 11;
+        hintStyle.fontStyle = FontStyle.Italic;
+        hintStyle.normal.textColor = new Color(0.5f, 1f, 0.5f);
+        GUI.Label(new Rect(x + 35, startY + 115, width - 70, 25), $"РЈРїСЂР°РІР»РµРЅРёРµ: {currentInfo.controlsHint.Replace("\n", " | ")}", hintStyle);
+    }
+
     void DrawMainLocalMenu(float x, float startY, float width, GUIStyle buttonStyle, GUIStyle labelStyle)
     {
-        float buttonWidth = 300;
-        float buttonHeight = 50;
+        // 1. Р‘Р»РѕРє РІС‹Р±РѕСЂР° СЃРїРµС†С‚РµС…РЅРёРєРё
+        DrawVehicleSelector(x, startY, width, buttonStyle, labelStyle);
+
+        float nextY = startY + 165;
+        float buttonWidth = 320;
+        float buttonHeight = 45;
         float buttonX = x + (width - buttonWidth) / 2;
 
-        // Кнопка создания игры
-        if (GUI.Button(new Rect(buttonX, startY, buttonWidth, buttonHeight), "СОЗДАТЬ ИГРУ", buttonStyle))
+        // 2. РљРЅРѕРїРєРё Р»РѕР±Р±Рё
+        if (GUI.Button(new Rect(buttonX, nextY, buttonWidth, buttonHeight), "РЎРћР—Р”РђРўР¬ РР“Р РЈ (РЎР•Р Р’Р•Р )", buttonStyle))
         {
             isCreatingGame = true;
         }
 
-        // Кнопка подключения к игре
-        if (GUI.Button(new Rect(buttonX, startY + 70, buttonWidth, buttonHeight), "ПОДКЛЮЧИТЬСЯ К ИГРЕ", buttonStyle))
+        if (GUI.Button(new Rect(buttonX, nextY + 55, buttonWidth, buttonHeight), "РџРћР”РљР›Р®Р§РРўР¬РЎРЇ Рљ РР“Р Р•", buttonStyle))
         {
             isJoiningGame = true;
         }
 
-        // Список доступных игр
-        GUI.Label(new Rect(x + 20, startY + 160, width - 40, 30), "ДОСТУПНЫЕ ИГРЫ:", labelStyle);
+        // 3. РЎРїРёСЃРѕРє РґРѕСЃС‚СѓРїРЅС‹С… СЃРµСЂРІРµСЂРѕРІ
+        GUI.Label(new Rect(x + 25, nextY + 115, width - 50, 25), "Р”РћРЎРўРЈРџРќР«Р• РЎР•Р Р’Р•Р Р« Р’ РЎР•РўР:", labelStyle);
 
-        float listHeight = 200;
-        scrollPosition = GUI.BeginScrollView(new Rect(x + 20, startY + 190, width - 40, listHeight),
+        float listHeight = 150;
+        scrollPosition = GUI.BeginScrollView(new Rect(x + 20, nextY + 140, width - 40, listHeight),
                                            scrollPosition, new Rect(0, 0, width - 60, availableGames.Count * 40));
 
         for (int i = 0; i < availableGames.Count; i++)
@@ -136,17 +193,15 @@ public class LocalGameMenu : MonoBehaviour
 
             if (GUI.Button(new Rect(0, i * 40, width - 80, 35), availableGames[i], gameButtonStyle))
             {
-                // Автозаполнение данных при выборе игры из списка
                 ipAddress = "192.168.1." + (i + 1);
-                playerName = "Игрок" + (i + 1);
+                playerName = "РРіСЂРѕРє" + (i + 1);
                 isJoiningGame = true;
             }
         }
-
         GUI.EndScrollView();
 
-        // Быстрый старт
-        if (GUI.Button(new Rect(buttonX, startY + 410, buttonWidth, 40), "БЫСТРЫЙ СТАРТ", buttonStyle))
+        // 4. РљРЅРѕРїРєР° РїСЂСЏРјРѕРіРѕ СЃС‚Р°СЂС‚Р°
+        if (GUI.Button(new Rect(buttonX, nextY + 300, buttonWidth, 42), "Р‘Р«РЎРўР Р«Р™ РЎРўРђР Рў РЎ Р’Р«Р‘Р РђРќРќРћР™ РўР•РҐРќРРљРћР™", buttonStyle))
         {
             StartQuickGame();
         }
@@ -154,39 +209,33 @@ public class LocalGameMenu : MonoBehaviour
 
     void DrawCreateGameMenu(float x, float startY, float width, GUIStyle labelStyle, GUIStyle textFieldStyle, GUIStyle buttonStyle)
     {
-        GUI.Label(new Rect(x + 20, startY, width - 40, 30), "СОЗДАНИЕ ИГРЫ", labelStyle);
+        GUI.Label(new Rect(x + 20, startY, width - 40, 25), "РџРђР РђРњР•РўР Р« РЎР•Р Р’Р•Р Рђ:", labelStyle);
 
-        // Поле названия игры
-        GUI.Label(new Rect(x + 20, startY + 50, 120, 25), "Название игры:", labelStyle);
-        gameName = GUI.TextField(new Rect(x + 150, startY + 50, width - 190, 30), gameName, textFieldStyle);
+        // РќР°Р·РІР°РЅРёРµ РёРіСЂС‹
+        GUI.Label(new Rect(x + 25, startY + 30, 120, 25), "РќР°Р·РІР°РЅРёРµ РёРіСЂС‹:", labelStyle);
+        gameName = GUI.TextField(new Rect(x + 150, startY + 30, width - 180, 28), gameName, textFieldStyle);
 
-        // Поле имени игрока
-        GUI.Label(new Rect(x + 20, startY + 100, 120, 25), "Ваше имя:", labelStyle);
-        playerName = GUI.TextField(new Rect(x + 150, startY + 100, width - 190, 30), playerName, textFieldStyle);
+        // РРјСЏ РёРіСЂРѕРєР°
+        GUI.Label(new Rect(x + 25, startY + 65, 120, 25), "Р’Р°С€Рµ РёРјСЏ:", labelStyle);
+        playerName = GUI.TextField(new Rect(x + 150, startY + 65, width - 180, 28), playerName, textFieldStyle);
 
-        // Порт
-        GUI.Label(new Rect(x + 20, startY + 150, 120, 25), "Порт:", labelStyle);
-        port = GUI.TextField(new Rect(x + 150, startY + 150, width - 190, 30), port, textFieldStyle);
+        // РџРѕСЂС‚
+        GUI.Label(new Rect(x + 25, startY + 100, 120, 25), "РџРѕСЂС‚:", labelStyle);
+        port = GUI.TextField(new Rect(x + 150, startY + 100, width - 180, 28), port, textFieldStyle);
 
-        // Настройки игры
-        GUI.Label(new Rect(x + 20, startY + 200, width - 40, 25), "НАСТРОЙКИ ИГРЫ:", labelStyle);
+        // Р’С‹Р±РѕСЂ С‚РµС…РЅРёРєРё РІ РјРµРЅСЋ СЃРѕР·РґР°РЅРёСЏ
+        DrawVehicleSelector(x, startY + 140, width, buttonStyle, labelStyle);
 
-        // Максимальное количество игроков
-        GUI.Label(new Rect(x + 20, startY + 240, 200, 25), "Макс. игроков: 4", labelStyle);
-
-        // Пароль (опционально)
-        bool usePassword = GUI.Toggle(new Rect(x + 20, startY + 280, 200, 25), false, "Использовать пароль", labelStyle);
-
-        // Кнопки
-        float buttonWidth = 200;
+        // РљРЅРѕРїРєРё
+        float buttonWidth = 240;
         float buttonX = x + (width - buttonWidth) / 2;
 
-        if (GUI.Button(new Rect(buttonX, startY + 330, buttonWidth, 40), "ЗАПУСТИТЬ СЕРВЕР", buttonStyle))
+        if (GUI.Button(new Rect(buttonX, startY + 310, buttonWidth, 42), "Р—РђРџРЈРЎРўРРўР¬ РЎР•Р Р’Р•Р  Р Р’РћР™РўР", buttonStyle))
         {
             CreateGameServer();
         }
 
-        if (GUI.Button(new Rect(buttonX, startY + 390, buttonWidth, 40), "НАЗАД", buttonStyle))
+        if (GUI.Button(new Rect(buttonX, startY + 365, buttonWidth, 38), "РќРђР—РђР” Р’ Р›РћР‘Р‘Р", buttonStyle))
         {
             isCreatingGame = false;
         }
@@ -194,38 +243,33 @@ public class LocalGameMenu : MonoBehaviour
 
     void DrawJoinGameMenu(float x, float startY, float width, GUIStyle labelStyle, GUIStyle textFieldStyle, GUIStyle buttonStyle)
     {
-        GUI.Label(new Rect(x + 20, startY, width - 40, 30), "ПОДКЛЮЧЕНИЕ К ИГРЕ", labelStyle);
+        GUI.Label(new Rect(x + 20, startY, width - 40, 25), "РџРћР”РљР›Р®Р§Р•РќРР• Рљ РЎР•Р Р’Р•Р РЈ:", labelStyle);
 
-        // IP адрес
-        GUI.Label(new Rect(x + 20, startY + 50, 120, 25), "IP адрес:", labelStyle);
-        ipAddress = GUI.TextField(new Rect(x + 150, startY + 50, width - 190, 30), ipAddress, textFieldStyle);
+        // IP Р°РґСЂРµСЃ
+        GUI.Label(new Rect(x + 25, startY + 30, 120, 25), "IP Р°РґСЂРµСЃ:", labelStyle);
+        ipAddress = GUI.TextField(new Rect(x + 150, startY + 30, width - 180, 28), ipAddress, textFieldStyle);
 
-        // Порт
-        GUI.Label(new Rect(x + 20, startY + 100, 120, 25), "Порт:", labelStyle);
-        port = GUI.TextField(new Rect(x + 150, startY + 100, width - 190, 30), port, textFieldStyle);
+        // РџРѕСЂС‚
+        GUI.Label(new Rect(x + 25, startY + 65, 120, 25), "РџРѕСЂС‚:", labelStyle);
+        port = GUI.TextField(new Rect(x + 150, startY + 65, width - 180, 28), port, textFieldStyle);
 
-        // Имя игрока
-        GUI.Label(new Rect(x + 20, startY + 150, 120, 25), "Ваше имя:", labelStyle);
-        playerName = GUI.TextField(new Rect(x + 150, startY + 150, width - 190, 30), playerName, textFieldStyle);
+        // РРјСЏ РёРіСЂРѕРєР°
+        GUI.Label(new Rect(x + 25, startY + 100, 120, 25), "Р’Р°С€Рµ РёРјСЏ:", labelStyle);
+        playerName = GUI.TextField(new Rect(x + 150, startY + 100, width - 180, 28), playerName, textFieldStyle);
 
-        // Статус подключения
-        GUI.Label(new Rect(x + 20, startY + 200, width - 40, 25), "Статус: Готов к подключению", labelStyle);
+        // Р’С‹Р±РѕСЂ С‚РµС…РЅРёРєРё РІ РјРµРЅСЋ РїРѕРґРєР»СЋС‡РµРЅРёСЏ
+        DrawVehicleSelector(x, startY + 140, width, buttonStyle, labelStyle);
 
-        // Кнопки
-        float buttonWidth = 200;
+        // РљРЅРѕРїРєРё
+        float buttonWidth = 240;
         float buttonX = x + (width - buttonWidth) / 2;
 
-        if (GUI.Button(new Rect(buttonX, startY + 250, buttonWidth, 40), "ПОДКЛЮЧИТЬСЯ", buttonStyle))
+        if (GUI.Button(new Rect(buttonX, startY + 310, buttonWidth, 42), "РџРћР”РљР›Р®Р§РРўР¬РЎРЇ РЎ РўР•РҐРќРРљРћР™", buttonStyle))
         {
             JoinGame();
         }
 
-        if (GUI.Button(new Rect(buttonX, startY + 310, buttonWidth, 40), "ОБНОВИТЬ СПИСОК", buttonStyle))
-        {
-            RefreshGameList();
-        }
-
-        if (GUI.Button(new Rect(buttonX, startY + 370, buttonWidth, 40), "НАЗАД", buttonStyle))
+        if (GUI.Button(new Rect(buttonX, startY + 365, buttonWidth, 38), "РќРђР—РђР” Р’ Р›РћР‘Р‘Р", buttonStyle))
         {
             isJoiningGame = false;
         }
@@ -233,46 +277,50 @@ public class LocalGameMenu : MonoBehaviour
 
     void CreateGameServer()
     {
-        Debug.Log($"Запуск сервера: {gameName}");
-        Debug.Log($"Порт: {port}");
-        Debug.Log($"Игрок: {playerName}");
-
-        // Здесь будет логика создания сервера
-        // NetworkManager.StartHost() или аналогичная функция
-
-        ShowMessage($"Сервер '{gameName}' запущен!\nОжидание подключений...");
+        Debug.Log($"Р—Р°РїСѓСЃРє СЃРµСЂРІРµСЂР°: {gameName}, РРіСЂРѕРє: {playerName}, РўРµС…РЅРёРєР°: {VehicleSelectionManager.SelectedVehicle}");
+        LoadGameScene();
     }
 
     void JoinGame()
     {
-        Debug.Log($"Подключение к {ipAddress}:{port}");
-        Debug.Log($"Игрок: {playerName}");
-
-        // Здесь будет логика подключения к серверу
-        // NetworkManager.StartClient() или аналогичная функция
-
-        ShowMessage($"Подключение к {ipAddress}:{port}...");
+        Debug.Log($"РџРѕРґРєР»СЋС‡РµРЅРёРµ Рє {ipAddress}:{port}, РРіСЂРѕРє: {playerName}, РўРµС…РЅРёРєР°: {VehicleSelectionManager.SelectedVehicle}");
+        LoadGameScene();
     }
 
     void StartQuickGame()
     {
-        Debug.Log("Быстрый старт игры");
-        // Автоматическое создание или подключение к игре
-        gameName = "Быстрая игра " + Random.Range(1000, 9999);
-        CreateGameServer();
+        Debug.Log($"Р‘С‹СЃС‚СЂС‹Р№ СЃС‚Р°СЂС‚ СЃ С‚РµС…РЅРёРєРѕР№: {VehicleSelectionManager.SelectedVehicle}");
+        LoadGameScene();
+    }
+
+    void LoadGameScene()
+    {
+        showLocalMenu = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        if (!string.IsNullOrEmpty(targetGameScene) && Application.CanStreamedLevelBeLoaded(targetGameScene))
+        {
+            SceneManager.LoadScene(targetGameScene);
+        }
+        else
+        {
+            Debug.LogWarning($"[LocalGameMenu] РЎС†РµРЅР° '{targetGameScene}' РЅРµ РЅР°Р№РґРµРЅР° РІ Build Settings! Р—Р°РіСЂСѓР¶Р°РµРј СЃС†РµРЅСѓ РїРѕ РёРЅРґРµРєСЃСѓ 1...");
+            if (SceneManager.sceneCountInBuildSettings > 1)
+            {
+                SceneManager.LoadScene(1);
+            }
+        }
     }
 
     void RefreshGameList()
     {
-        Debug.Log("Обновление списка игр...");
-        // Логика поиска доступных игр в локальной сети
-        availableGames.Add("Новая игра " + Random.Range(100, 999));
-        ShowMessage("Список игр обновлен!");
+        availableGames.Add("РЎРµСЂРІРµСЂ #" + Random.Range(10, 99));
+        ShowMessage("РЎРїРёСЃРѕРє СЃРµСЂРІРµСЂРѕРІ РѕР±РЅРѕРІР»РµРЅ!");
     }
 
     void ShowMessage(string message)
     {
-        // В реальной реализации можно сделать красивый popup
         Debug.Log(message);
     }
 
@@ -287,7 +335,6 @@ public class LocalGameMenu : MonoBehaviour
         return result;
     }
 
-    // Методы для внешнего управления
     public void ShowLocalMenu()
     {
         showLocalMenu = true;
@@ -306,10 +353,9 @@ public class LocalGameMenu : MonoBehaviour
 
     void Start()
     {
-        // Автогенерация демо-игр
         for (int i = 0; i < 3; i++)
         {
-            availableGames.Add("Локальная игра " + (i + 1));
+            availableGames.Add("Р›РѕРєР°Р»СЊРЅС‹Р№ СЃРµСЂРІРµСЂ " + (i + 1));
         }
     }
 }

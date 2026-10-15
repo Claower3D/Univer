@@ -10,21 +10,28 @@ public class MainMenuManager : MonoBehaviour
 
     [Header("Network Settings")]
     public string gameSceneName = "GameScene";
-    private string gameName = "Моя игра";
-    private string playerName = "Игрок";
+    private string gameName = "РњРѕСЏ РёРіСЂР°";
+    private string playerName = "РРіСЂРѕРє";
     private string ipAddress = "localhost";
     private string port = "7777";
 
+    [Header("Vehicle Selection UI (Optional)")]
+    public TMPro.TMP_Text vehicleNameText;
+    public TMPro.TMP_Text vehicleDescText;
+    public TMPro.TMP_Text vehicleHintText;
+
     void Start()
     {
-        // Показываем главное меню при старте
+        // РџРѕРєР°Р·С‹РІР°РµРј РіР»Р°РІРЅРѕРµ РјРµРЅСЋ РїСЂРё СЃС‚Р°СЂС‚Рµ
         ShowMainMenu();
 
-        // Загружаем сохраненные настройки
-        playerName = PlayerPrefs.GetString("PlayerName", "Игрок");
+        // Р—Р°РіСЂСѓР¶Р°РµРј СЃРѕС…СЂР°РЅРµРЅРЅС‹Рµ РЅР°СЃС‚СЂРѕР№РєРё
+        playerName = PlayerPrefs.GetString("PlayerName", "РРіСЂРѕРє");
+
+        UpdateVehicleUI();
     }
 
-    // === ОСНОВНЫЕ КНОПКИ ГЛАВНОГО МЕНЮ ===
+    // === РћРЎРќРћР’РќР«Р• РљРќРћРџРљР Р“Р›РђР’РќРћР“Рћ РњР•РќР® ===
 
     public void OnLocalPlayClicked()
     {
@@ -35,7 +42,7 @@ public class MainMenuManager : MonoBehaviour
     public void OnOnlinePlayClicked()
     {
         Debug.Log("Online Play button clicked");
-        // Здесь может быть логика для онлайн игры
+        // Р—РґРµСЃСЊ РјРѕР¶РµС‚ Р±С‹С‚СЊ Р»РѕРіРёРєР° РґР»СЏ РѕРЅР»Р°Р№РЅ РёРіСЂС‹
     }
 
     public void OnSettingsClicked()
@@ -50,16 +57,16 @@ public class MainMenuManager : MonoBehaviour
         Application.Quit();
     }
 
-    // === ЛОКАЛЬНАЯ ИГРА ===
+    // === Р›РћРљРђР›Р¬РќРђРЇ РР“Р Рђ ===
 
     public void OnCreateGameClicked()
     {
         Debug.Log($"Creating game: {gameName}, Player: {playerName}, Port: {port}");
 
-        // Здесь логика создания сервера
+        // Р—РґРµСЃСЊ Р»РѕРіРёРєР° СЃРѕР·РґР°РЅРёСЏ СЃРµСЂРІРµСЂР°
         // NetworkManager.Singleton.StartHost();
 
-        // Переход в игровую сцену
+        // РџРµСЂРµС…РѕРґ РІ РёРіСЂРѕРІСѓСЋ СЃС†РµРЅСѓ
         SceneManager.LoadScene(gameSceneName);
     }
 
@@ -67,25 +74,25 @@ public class MainMenuManager : MonoBehaviour
     {
         Debug.Log($"Joining game: {ipAddress}:{port}, Player: {playerName}");
 
-        // Здесь логика подключения к серверу
+        // Р—РґРµСЃСЊ Р»РѕРіРёРєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ Рє СЃРµСЂРІРµСЂСѓ
         // NetworkManager.Singleton.StartClient();
 
-        // Переход в игровую сцену
+        // РџРµСЂРµС…РѕРґ РІ РёРіСЂРѕРІСѓСЋ СЃС†РµРЅСѓ
         SceneManager.LoadScene(gameSceneName);
     }
 
     public void OnQuickPlayClicked()
     {
-        gameName = "Быстрая игра " + Random.Range(1000, 9999);
+        gameName = "Р‘С‹СЃС‚СЂР°СЏ РёРіСЂР° " + Random.Range(1000, 9999);
         Debug.Log($"Quick play: {gameName}");
         OnCreateGameClicked();
     }
 
-    // === НАСТРОЙКИ ===
+    // === РќРђРЎРўР РћР™РљР ===
 
     public void OnSettingsApplied()
     {
-        // Сохраняем настройки
+        // РЎРѕС…СЂР°РЅСЏРµРј РЅР°СЃС‚СЂРѕР№РєРё
         PlayerPrefs.SetString("PlayerName", playerName);
         PlayerPrefs.Save();
 
@@ -93,7 +100,7 @@ public class MainMenuManager : MonoBehaviour
         Debug.Log("Settings applied");
     }
 
-    // === УПРАВЛЕНИЕ ПАНЕЛЯМИ ===
+    // === РЈРџР РђР’Р›Р•РќРР• РџРђРќР•Р›РЇРњР ===
 
     public void ShowMainMenu()
     {
@@ -116,7 +123,7 @@ public class MainMenuManager : MonoBehaviour
         settingsPanel.SetActive(true);
     }
 
-    // === МЕТОДЫ ДЛЯ UI ===
+    // === РњР•РўРћР”Р« Р”Р›РЇ UI ===
 
     public void SetGameName(string name)
     {
@@ -148,5 +155,27 @@ public class MainMenuManager : MonoBehaviour
     public void OnBackFromSettings()
     {
         ShowMainMenu();
+    }
+
+    // === Р’Р«Р‘РћР  РЎРџР•Р¦РўР•РҐРќРРљР ===
+
+    public void OnNextVehicleClicked()
+    {
+        VehicleSelectionManager.SelectNext();
+        UpdateVehicleUI();
+    }
+
+    public void OnPreviousVehicleClicked()
+    {
+        VehicleSelectionManager.SelectPrevious();
+        UpdateVehicleUI();
+    }
+
+    public void UpdateVehicleUI()
+    {
+        VehicleInfo info = VehicleSelectionManager.GetInfo(VehicleSelectionManager.SelectedVehicle);
+        if (vehicleNameText != null) vehicleNameText.text = info.displayName;
+        if (vehicleDescText != null) vehicleDescText.text = info.description;
+        if (vehicleHintText != null) vehicleHintText.text = info.controlsHint;
     }
 }
