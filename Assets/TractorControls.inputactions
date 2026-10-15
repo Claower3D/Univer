@@ -1,0 +1,35 @@
+{
+    "version": 1,
+    "name": "TractorControls",
+    "maps": [
+        {
+            "name": "Player",
+            "id": "dbe6c998-982b-495a-a5b2-375cea360aef",
+            "actions": [
+                {
+                    "name": "Move",
+                    "type": "Button",
+                    "id": "a6b01f97-68ac-4d1a-9b0a-67bd4aabc6f3",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "f0093747-86a4-475c-a58a-3fe4468efe1f",
+                    "path": "<Keyboard>/anyKey",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
